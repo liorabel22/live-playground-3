@@ -1,6 +1,6 @@
 <template>
-  <div class="playground-container flex w-full h-80">
-    <div class="code-editors-container flex flex-col w-1/2 h-full">
+  <div class="playground-container flex w-full h-full">
+    <div class="code-editors-container flex flex-col w-1/2 h-full grow">
       <CodeEditor
         v-for="(editor, $index) in numEditors"
         :key="editor"
@@ -10,7 +10,7 @@
         @change="handleChange"
       />
     </div>
-    <div class="code-preview-container w-1/2 h-full">
+    <div class="code-preview-container w-1/2 h-full grow">
       <CodePreview :code="previewCode" />
     </div>
   </div>
@@ -30,7 +30,7 @@ export default defineComponent({
     CodePreview,
   },
   props: {
-    languages: { type: Array as () => string[], required: true },
+    languages: { type: Array as () => string[], default: () => ['HTML', 'CSS'] },
     initialCodes: { type: Array as () => string[], default: () => [''] },
   },
   setup(props) {
@@ -38,7 +38,6 @@ export default defineComponent({
     const cssCode = ref('');
     const htmlCode = ref('');
     const handleChange = ({ lang, code }: { lang: Languages; code: string }) => {
-      console.log('changed on PlayGround', code);
       switch (lang) {
         case Languages.CSS:
           cssCode.value = code;

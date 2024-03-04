@@ -1,22 +1,45 @@
 {
   "name": "live-playground-3",
-  "version": "0.0.0",
+  "version": "0.0.3",
+  "type": "module",
   "description": "HTML and CSS playground.",
   "author": {
     "name": "Lior Abel",
     "email": "liorabel22@gmail.com"
   },
-  "private": true,
-  "type": "module",
-  "main": "dist/live-playground-3.umd.js",
-  "module": "dist/live-playground-3.esm.js",
-  "unpkg": "dist/live-playground-3.min.js",
-  "browser": {
-    "./sfc": "src/live-playground-3.vue"
+  "repository": "https://github.com/liorabel22/live-playground-3",
+  "bugs": "https://github.com/liorabel22/live-playground-3/issues",
+  "keywords": [
+    "vue3",
+    "vue 3",
+    "playground",
+    "sandbox",
+    "html",
+    "css"
+  ],
+  "license": "MIT",
+  "private": false,
+  "files": [
+    "dist"
+  ],
+  "types": [
+    "./dist/PlayGround.vue.d.ts",
+    "./dist/CodeEditor.vue.d.ts",
+    "./dist/CodePreview.vue.d.ts"
+  ],
+  "main": "./dist/live-playground-3.cjs",
+  "module": "./dist/live-playground-3.js",
+  "exports": {
+    ".": {
+      "import": "./dist/live-playground-3.js",
+      "require": "./dist/live-playground-3.cjs"
+    },
+    "./src/assets/css/tailwind.css": "./dist/style.css"
   },
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
+    "buildd": "vue-tsc && vite build",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
@@ -44,6 +67,7 @@
     "npm-run-all2": "^6.1.1",
     "postcss": "^8.4.35",
     "prettier": "^3.0.3",
+    "rollup-plugin-typescript2": "^0.36.0",
     "tailwindcss": "^3.4.1",
     "typescript": "~5.3.0",
     "vite": "^5.0.11",

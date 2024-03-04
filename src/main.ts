@@ -7,6 +7,8 @@ import VueCodemirror from 'vue-codemirror';
 
 import App from './App.vue';
 
+import PlayGroundPlugin from './installer';
+
 const app = createApp(App);
 
 app.use(createPinia());
@@ -19,5 +21,6 @@ app.use(VueCodemirror, {
   autoDestroy: true,
   extensions: [basicSetup],
 });
+app.use(PlayGroundPlugin);
 
 app.mount('#app');

@@ -59,7 +59,6 @@ export default defineComponent({
     // Codemirror EditorView instance ref
     const view = shallowRef();
     const handleReady = (payload: any) => {
-      console.log(payload);
       view.value = payload.view;
       emit('change', { lang: props.language, code: localCode.value });
     };
@@ -72,7 +71,6 @@ export default defineComponent({
       }
 
       debounceTimer.value = setTimeout(() => {
-        console.log('change', localCode.value);
         emit('change', { lang: props.language, code: localCode.value });
       }, 3000);
     };
@@ -83,7 +81,6 @@ export default defineComponent({
       extensions,
       handleReady,
       handleChange,
-      log: console.log,
     };
   },
 });
