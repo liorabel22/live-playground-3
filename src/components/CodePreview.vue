@@ -12,6 +12,7 @@ export default defineComponent({
   name: 'CodePreview',
   props: {
     code: { type: String, required: true },
+    theme: { type: String, required: true },
   },
   setup(props) {
     return {

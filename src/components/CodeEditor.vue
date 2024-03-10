@@ -1,6 +1,6 @@
 <template>
   <codemirror
-    :style="{ height: props.height, backgroundColor: 'black' }"
+    :style="{ height: props.height }"
     v-model="localCode"
     :extensions="extensions"
     @ready="handleReady"
@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, shallowRef, reactive } from 'vue';
+import { defineComponent, ref, shallowRef, reactive, watch } from 'vue';
 import { Codemirror } from 'vue-codemirror';
 import type { LanguageSupport } from '@codemirror/language';
 import { javascript } from '@codemirror/lang-javascript';
@@ -19,6 +19,7 @@ import { html } from '@codemirror/lang-html';
 import { css } from '@codemirror/lang-css';
 
 import { Languages } from '@/enums/Languages';
+import Themes from '@/assets/theme/themes';
 
 export default defineComponent({
   name: 'CodeEditor',
@@ -29,13 +30,14 @@ export default defineComponent({
     language: { type: String, required: true },
     code: { type: String, required: true },
     height: { type: String, default: '400px' },
+    theme: { type: String, required: true },
   },
   emits: ['change'],
   setup(props, { emit }) {
     const localCode = ref(props.code);
 
     // Set extensions
-    const extensions = reactive<LanguageSupport[]>([]);
+    const extensions = reactive<(LanguageSupport | any)[]>([Themes[props.theme]]);
     switch (props.language) {
       case String(Languages.HTML):
         extensions.push(
@@ -55,6 +57,15 @@ export default defineComponent({
       default:
         break;
     }
+
+    watch(
+      () => props.theme,
+      (newVal: string) => {
+        const index = extensions.findIndex((extension) => Array.isArray(extension));
+        extensions.splice(index, 1);
+        extensions.push(Themes[newVal]);
+      },
+    );
 
     // Codemirror EditorView instance ref
     const view = shallowRef();

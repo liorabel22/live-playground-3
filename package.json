@@ -1,6 +1,6 @@
 {
   "name": "live-playground-3",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "type": "module",
   "description": "HTML and CSS playground.",
   "author": {
@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "pinia": "^2.1.7",
+    "thememirror": "^2.0.1",
     "vue": "^3.4.15"
   },
   "devDependencies": {

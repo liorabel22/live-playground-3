@@ -7,11 +7,15 @@
         :language="enumLanguages[$index]"
         :code="localInitialCodes[$index]"
         :height="codeEditorHeight"
+        :theme="props.theme"
         @change="handleChange"
       />
     </div>
     <div class="code-preview-container w-1/2 h-full grow">
-      <CodePreview :code="previewCode" />
+      <CodePreview
+        :code="previewCode"
+        :theme="props.theme"
+      />
     </div>
   </div>
 </template>
@@ -32,6 +36,7 @@ export default defineComponent({
   props: {
     languages: { type: Array as () => string[], default: () => ['HTML', 'CSS'] },
     initialCodes: { type: Array as () => string[], default: () => [''] },
+    theme: { type: String, default: 'dark' },
   },
   setup(props) {
     const previewCode = ref('');
