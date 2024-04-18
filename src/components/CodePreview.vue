@@ -13,6 +13,7 @@ export default defineComponent({
   props: {
     code: { type: String, required: true },
     theme: { type: String, required: true },
+    fonts: { type: String, required: true },
   },
   setup(props) {
     return {

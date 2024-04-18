@@ -1,3 +1,26 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    :root {
+        --background: 240 41% 92%;
+        --foreground: 240 100% 1%;
+        --caret: 224 52% 40%;
+        --selection: 63 70% 49%;
+        --line-highlight: 24 100% 99%;
+        --gutter-background: 240 41% 92%;
+        --gutter-foreground: 224 52% 40%;
+    }
+
+    :root[class~="dark"] {
+        --background: 210 65% 20%;
+        --foreground: 30 47% 94%;
+        --caret: 38 96% 50%;
+        --selection: 152 100% 41%;
+        --line-highlight: 210 73% 6%;
+        --gutter-background: 210 65% 20%;
+        --gutter-foreground: 199 100% 53%;
+    }
+}
+

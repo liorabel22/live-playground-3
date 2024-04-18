@@ -1,5 +1,7 @@
 <template>
-  <div class="playground-container flex w-full h-full">
+  <div
+    class="playground-container flex w-full h-full border-2 border-caret rounded-xl overflow-auto"
+  >
     <div class="code-editors-container flex flex-col w-1/2 h-full grow">
       <CodeEditor
         v-for="(editor, $index) in numEditors"
@@ -8,22 +10,28 @@
         :code="localInitialCodes[$index]"
         :height="codeEditorHeight"
         :theme="props.theme"
+        :display="props.display"
+        :fonts="props.fonts.code"
         @change="handleChange"
       />
     </div>
-    <div class="code-preview-container w-1/2 h-full grow">
+    <div
+      class="code-preview-container w-1/2 h-full grow bg-background text-foreground border-s border-caret"
+    >
       <CodePreview
         :code="previewCode"
         :theme="props.theme"
+        :fonts="props.fonts.preview"
       />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive } from 'vue';
+import { defineComponent, ref, reactive, watch } from 'vue';
 import CodeEditor from '@/components/CodeEditor.vue';
 import CodePreview from '@/components/CodePreview.vue';
+import { darkSettings, lightSettings } from '@/assets/theme/themes';
 
 import { Languages } from '@/enums/Languages';
 
@@ -37,8 +45,28 @@ export default defineComponent({
     languages: { type: Array as () => string[], default: () => ['HTML', 'CSS'] },
     initialCodes: { type: Array as () => string[], default: () => [''] },
     theme: { type: String, default: 'dark' },
+    display: { type: String, default: 'tab' },
+    fonts: {
+      type: Object,
+      default: () => {
+        return { preview: 'sans-serif', code: 'monospace' };
+      },
+    },
   },
   setup(props) {
+    // set theme
+    const html = document.getElementsByTagName('html')[0];
+    html.setAttribute('class', props.theme);
+
+    let currThemeColors = props.theme === 'dark' ? darkSettings : lightSettings;
+
+    watch(
+      () => props.theme,
+      (newTheme: string) => {
+        html.setAttribute('class', newTheme);
+        currThemeColors = newTheme === 'dark' ? darkSettings : lightSettings;
+      },
+    );
     const previewCode = ref('');
     const cssCode = ref('');
     const htmlCode = ref('');
@@ -55,6 +83,11 @@ export default defineComponent({
       }
       previewCode.value = `
           <style>
+            html {
+              height: 100%;
+              font-family: ${props.fonts.preview};
+              color: ${currThemeColors.foreground};
+            }
             ${cssCode.value}
           </style>
           ${htmlCode.value}

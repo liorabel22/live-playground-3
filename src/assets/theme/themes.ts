@@ -159,3 +159,4 @@ const themes: Themes = {
 };
 
 export default themes;
+export { lightSettings, darkSettings };

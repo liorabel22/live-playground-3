@@ -14,6 +14,7 @@
 import { defineComponent, ref, shallowRef, reactive, watch } from 'vue';
 import { Codemirror } from 'vue-codemirror';
 import type { LanguageSupport } from '@codemirror/language';
+import { EditorView } from '@codemirror/view';
 import { javascript } from '@codemirror/lang-javascript';
 import { html } from '@codemirror/lang-html';
 import { css } from '@codemirror/lang-css';
@@ -31,13 +32,23 @@ export default defineComponent({
     code: { type: String, required: true },
     height: { type: String, default: '400px' },
     theme: { type: String, required: true },
+    fonts: { type: String, required: true },
   },
   emits: ['change'],
   setup(props, { emit }) {
     const localCode = ref(props.code);
 
+    const baseTheme = EditorView.theme({
+      '.cm-scroller': {
+        fontFamily: props.fonts,
+      },
+      '.cm-gutters': {
+        borderRight: 'none',
+      },
+    });
+
     // Set extensions
-    const extensions = reactive<(LanguageSupport | any)[]>([Themes[props.theme]]);
+    const extensions = reactive<(LanguageSupport | any)[]>([Themes[props.theme], baseTheme]);
     switch (props.language) {
       case String(Languages.HTML):
         extensions.push(
@@ -61,7 +72,7 @@ export default defineComponent({
     watch(
       () => props.theme,
       (newVal: string) => {
-        const index = extensions.findIndex((extension) => Array.isArray(extension));
+        const index = extensions.findIndex((extension) => Array.isArray(extension[0]));
         extensions.splice(index, 1);
         extensions.push(Themes[newVal]);
       },
