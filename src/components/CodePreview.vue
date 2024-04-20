@@ -22,3 +22,8 @@ export default defineComponent({
   },
 });
 </script>
+<style lang="css">
+iframe {
+  @apply h-full w-full;
+}
+</style>
