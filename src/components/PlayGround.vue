@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="playground-container flex w-full h-full border-2 border-caret rounded-xl overflow-hidden"
-  >
+  <div class="playground-container flex w-full h-full rounded-xl overflow-hidden">
     <div class="code-editors-container flex flex-col w-1/2 h-full grow">
       <CodeEditor
         v-for="(editor, $index) in numEditors"
@@ -15,9 +13,7 @@
         @change="handleChange"
       />
     </div>
-    <div
-      class="code-preview-container w-1/2 h-full grow bg-background text-foreground border-s border-caret"
-    >
+    <div class="code-preview-container w-1/2 h-full grow bg-background text-foreground">
       <CodePreview
         :code="previewCode"
         :theme="props.theme"
@@ -123,3 +119,12 @@ export default defineComponent({
   },
 });
 </script>
+1
+<style lang="css">
+.playground-container {
+  @apply border-2 border-caret;
+}
+.code-preview-container {
+  @apply border-s border-caret;
+}
+</style>
