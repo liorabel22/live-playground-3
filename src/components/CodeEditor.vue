@@ -21,6 +21,7 @@ import { css } from '@codemirror/lang-css';
 
 import { Languages } from '@/enums/Languages';
 import Themes from '@/assets/theme/themes';
+import { lightSettings, darkSettings } from '@/assets/theme/themes';
 
 export default defineComponent({
   name: 'CodeEditor',
@@ -37,15 +38,27 @@ export default defineComponent({
   emits: ['change'],
   setup(props, { emit }) {
     const localCode = ref(props.code);
+    let themeColors = props.theme === 'light' ? lightSettings : darkSettings;
 
-    const baseTheme = EditorView.theme({
-      '.cm-scroller': {
-        fontFamily: props.fonts,
+    const baseTheme = EditorView.theme(
+      {
+        '.cm-scroller': {
+          fontFamily: props.fonts,
+        },
+        '.cm-gutters': {
+          borderRight: 'none',
+        },
+        '&.cm-focused > .cm-scroller > .cm-selectionLayer': { zIndex: '2 !important' },
+        '&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground': {
+          backgroundColor: `${themeColors.selection}`,
+          opacity: 0.3,
+        },
+        '&.cm-focused': {
+          outline: 'none',
+        },
       },
-      '.cm-gutters': {
-        borderRight: 'none',
-      },
-    });
+      { dark: false },
+    );
 
     // Set extensions
     const extensions = reactive<(LanguageSupport | any)[]>([Themes[props.theme], baseTheme]);
@@ -72,8 +85,10 @@ export default defineComponent({
     watch(
       () => props.theme,
       (newVal: string) => {
-        const index = extensions.findIndex((extension) => Array.isArray(extension[0]));
-        extensions.splice(index, 1);
+        const themeIndex = extensions.findIndex(
+          (extension) => Array.isArray(extension) && Array.isArray(extension[0]),
+        );
+        extensions.splice(themeIndex, 1);
         extensions.push(Themes[newVal]);
       },
     );

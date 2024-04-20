@@ -1,6 +1,6 @@
 <template>
   <div
-    class="playground-container flex w-full h-full border-2 border-caret rounded-xl overflow-auto"
+    class="playground-container flex w-full h-full border-2 border-caret rounded-xl overflow-hidden"
   >
     <div class="code-editors-container flex flex-col w-1/2 h-full grow">
       <CodeEditor
