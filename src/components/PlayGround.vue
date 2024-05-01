@@ -1,8 +1,13 @@
 <template>
   <div
+    ref="pane_container"
     class="playground-container flex w-full h-full border-2 border-caret rounded-xl overflow-hidden"
   >
-    <div class="code-editors-container flex flex-col w-1/2 h-full grow">
+    <div
+      ref="left_pane"
+      class="code-editors-container flex flex-col h-full"
+      :style="leftPaneStyle"
+    >
       <CodeEditor
         v-for="(editor, $index) in numEditors"
         :key="editor"
@@ -16,7 +21,14 @@
       />
     </div>
     <div
-      class="code-preview-container w-1/2 h-full grow bg-background text-foreground border-s border-caret"
+      class="drag-bar w-2 cursor-col-resize h-full bg-yellow-300"
+      @mousedown="startDrag"
+      @mousemove="doDrag"
+    ></div>
+    <div
+      ref="right_pane"
+      class="code-preview-container h-full bg-background text-foreground border-s border-caret"
+      :style="rightPaneStyle"
     >
       <CodePreview
         :code="previewCode"
@@ -28,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, watch } from 'vue';
+import { defineComponent, ref, reactive, watch, onMounted } from 'vue';
 import CodeEditor from '@/components/CodeEditor.vue';
 import CodePreview from '@/components/CodePreview.vue';
 import { darkSettings, lightSettings } from '@/assets/theme/themes';
@@ -111,6 +123,71 @@ export default defineComponent({
         });
     }
 
+    // DRAGGABLE
+    const pane_container = ref<HTMLInputElement | null>(null);
+    const left_pane = ref<HTMLInputElement | null>(null);
+    const right_pane = ref<HTMLInputElement | null>(null);
+
+    const dragging = ref<boolean>(false);
+
+    const leftPanePercentage = ref<number>(50);
+    const rightPanePercentage = ref<number>(50);
+    const prevPageX = ref<number>(0);
+
+    interface ElementStyle {
+      width: string;
+    }
+
+    const rightPaneStyle = reactive<ElementStyle>({
+      width: '0%',
+    });
+    const leftPaneStyle = reactive<ElementStyle>({
+      width: '0%',
+    });
+
+    onMounted(() => {
+      setInitialPaneSizes();
+      window.addEventListener('mouseup', stopDrag);
+      window.addEventListener('resize', setInitialPaneSizes);
+    });
+
+    const setInitialPaneSizes = () => {
+      if (left_pane.value && right_pane.value && pane_container.value) {
+        const unit =
+          pane_container.value?.clientWidth /
+          (leftPanePercentage.value + rightPanePercentage.value);
+        leftPaneStyle.width = `${unit * leftPanePercentage.value}px`;
+        rightPaneStyle.width = `${unit * rightPanePercentage.value}px`;
+      }
+    };
+
+    const startDrag = (mousedownEvent: MouseEvent) => {
+      mousedownEvent.preventDefault();
+      dragging.value = true;
+      prevPageX.value = mousedownEvent.pageX;
+    };
+
+    const stopDrag = () => {
+      if (dragging.value) {
+        dragging.value = false;
+      }
+    };
+
+    const doDrag = (mousemoveEvent: MouseEvent) => {
+      mousemoveEvent.preventDefault();
+      if (dragging.value && left_pane.value && right_pane.value && pane_container.value) {
+        const deltaPageX = mousemoveEvent.pageX - prevPageX.value;
+        prevPageX.value = mousemoveEvent.pageX;
+
+        leftPaneStyle.width = `${left_pane.value?.clientWidth + deltaPageX}px`;
+        rightPaneStyle.width = `${right_pane.value?.clientWidth - deltaPageX}px`;
+        leftPanePercentage.value =
+          (100 / pane_container.value?.clientWidth) * left_pane.value?.clientWidth;
+        rightPanePercentage.value =
+          (100 / pane_container.value?.clientWidth) * right_pane.value?.clientWidth;
+      }
+    };
+
     return {
       props,
       handleChange,
@@ -119,6 +196,13 @@ export default defineComponent({
       enumLanguages,
       localInitialCodes,
       codeEditorHeight,
+      pane_container,
+      left_pane,
+      right_pane,
+      rightPaneStyle,
+      leftPaneStyle,
+      startDrag,
+      doDrag,
     };
   },
 });
