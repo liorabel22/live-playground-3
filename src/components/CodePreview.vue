@@ -1,5 +1,7 @@
 <template>
   <iframe
+    class="ms-7"
+    id="iframeID"
     :srcdoc="props.code"
     loading="lazy"
   ></iframe>
