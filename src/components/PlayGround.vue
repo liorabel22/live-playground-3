@@ -72,6 +72,17 @@ export default defineComponent({
       (newTheme: string) => {
         html.setAttribute('class', newTheme);
         currThemeColors = newTheme === 'dark' ? darkSettings : lightSettings;
+        previewCode.value = `
+          <style>
+            html {
+              height: 100%;
+              font-family: ${props.fonts.preview};
+              color: ${currThemeColors.foreground};
+            }
+            ${cssCode.value}
+          </style>
+          ${htmlCode.value}
+          `;
       },
     );
     const previewCode = ref('');

@@ -1,6 +1,6 @@
 {
   "name": "live-playground-3",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "type": "module",
   "description": "HTML and CSS playground.",
   "author": {
@@ -40,7 +40,6 @@
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
-    "buildd": "vue-tsc && vite build",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
