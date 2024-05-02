@@ -1,6 +1,6 @@
 {
   "name": "live-playground-3",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "type": "module",
   "description": "HTML and CSS playground.",
   "author": {
@@ -25,7 +25,8 @@
   "types": [
     "./dist/PlayGround.vue.d.ts",
     "./dist/CodeEditor.vue.d.ts",
-    "./dist/CodePreview.vue.d.ts"
+    "./dist/CodePreview.vue.d.ts",
+    "./dist/Resizer.vue.d.ts"
   ],
   "main": "./dist/live-playground-3.cjs",
   "module": "./dist/live-playground-3.js",
